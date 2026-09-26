@@ -1,0 +1,24 @@
+// Applied after Capacitor’s app/build.gradle. Forces every debug APK onto
+// android/app/rite-debug.keystore so updates keep the same signature.
+android {
+    signingConfigs {
+        rite {
+            def store = file("rite-debug.keystore")
+            if (!store.exists()) {
+                throw new GradleException("Missing android/app/rite-debug.keystore — run native/inject-lock.mjs")
+            }
+            storeFile store
+            storePassword "android"
+            keyAlias "rite"
+            keyPassword "android"
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.rite
+        }
+        release {
+            signingConfig signingConfigs.rite
+        }
+    }
+}
